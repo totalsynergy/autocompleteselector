@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-4">
           
           <input type="text" class="form-control" >
           <ul class="dropdown-menu" role="menu" style="display:block;">
@@ -27,9 +27,9 @@
             <li class="disabled"><a role="menuitem" tabindex="-1" href="#"><i>No matches found</i></a></li>
             <li class="disabled"><a role="menuitem" tabindex="-1" href="#"><i>Loading...</i></a></li>
             <li class="active"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-            <li class="heading">Project Contacts</li>
+            <li class="dropdown-header">Project Contacts</li>
             <li class=""><a role="menuitem" tabindex="-1" href="#">ABC Construction</a></li>
-            <li class="heading">All Contacts</li>
+            <li class="dropdown-header">All Contacts</li>
             <li class=""><a role="menuitem" tabindex="-1" href="#">Local Council</a></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
             <li role="presentation" class="divider"></li>
@@ -46,16 +46,35 @@
             </li>
           </ul>
         </div>
-        <div class="col-xs-6">
-          <div ng-controller="DropDownController">
-            <input type="text" class="form-control" >
-            <ul class="dropdown-menu" role="menu" style="display:block;">
-              <li ng-repeat="phone in phones" class="active"><a role="menuitem" tabindex="-1" href="#">{{phone.name}}<a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+        <div class="col-xs-3">
+          <div ng-controller="DropDownController" ng-cloak>
+            <input type="text" ng-model="text" ng-focus="onFocus()" 
+              ng-blur="onBlur()" ng-keydown="onKeyDown($event)"
+              focus-on="newItemAdded" class="form-control" >
+            <ul class="dropdown-menu" role="menu" ng-if="showList()" ng-mouseover="onHover()" ng-mouseleave="onLeave()" style="display: block;">
+              <li ng-repeat="item in items" ng-click="itemClicked(item.name)" ng-class="{active: item.active}">
+                <a role="menuitem" tabindex="-1"  href="#">
+                  {{item.name}}
+                <a>
+                </li>
               <li role="presentation" class="divider"></li>
               <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Add new</a></li>
             </ul>
           </div>
+        </div>
+        <div class="col-xs-1">
+          <input type="text" value="next" class="form-control">
+        </div>
+        <div class="col-xs-4">
+          <h4>Desired Features</h4>
+          <p>
+            detect focus event of the text box; pre populated lists or AJAX list support;
+            grouping of results; Add item on the fly (AJAX only); angular control only;
+            data-attribute confuguration; inherited? for projects/contacts for re-use;
+            optional expanded view on add?;
+            keyboard navigation - up down tabe enter;
+            jquery version for simple selectors;
+          </p>
         </div>
       </div>
     </div>
