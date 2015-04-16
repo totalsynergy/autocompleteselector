@@ -81,7 +81,7 @@
       <input type="text" ng-model="item.text" ng-focus="onFocus()" 
         ng-blur="onBlur()" ng-keydown="onKeyDown($event)"
         focus-on="newItemAdded" class="form-control" >
-      <ul class="dropdown-menu" role="menu" ng-if="showList()" ng-mouseover="onHover()" ng-mouseleave="onLeave()" style="display: block; min-width: 200px; left: 15px;">
+      <ul class="dropdown-menu" role="menu" ng-if="showList()" ng-mouseover="onHover()" ng-mouseleave="onLeave()" style="display: block; min-width: 200px; left: 15px; top: 32px;">
         <li ng-repeat="item in items" ng-click="itemClicked(item.name)" ng-class="{active: item.active}">
           <a role="menuitem" tabindex="-1"  href="#">
             {{item.name}}
