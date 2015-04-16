@@ -42,7 +42,6 @@ sampleApp.controller('ProjectController', function($scope, $http, $controller){
   var parentOnLoad = $scope.onLoad;
   $scope.onLoad = function(){
     parentOnLoad();
-    console.log('project onload');
     $scope.selectItem($scope.item.projectId, $scope.item.project);
   };
   
@@ -65,28 +64,28 @@ sampleApp.controller('ProjectController', function($scope, $http, $controller){
 sampleApp.controller('DropDownController', function ($scope, $http) {
   $scope.items = [];
   $scope.dropdownitem = { id: 0, text: ""};
-  //$scope.id = 0;
-  //$scope.text = "";
   $scope.listVisible = false;
   $scope.listHover = false;
+  $scope.groupby = "";
+  
   var scope = $scope;
   
   $scope.onLoad = function(){
-    console.log('drop down on load');
-    $scope.loadList();
+    // empty
   };
   
   $scope.loadList = function(callback){
     var data = [];
+    callback(data);
   };
   
   $scope.$watchGroup(['listVisible', 'listHover'], function(newValues, oldValues, scope) {
-    if(oldValues[0] === false && oldValues[1] === false) {
+    if(oldValues[0] === false && oldValues[1] === false && $scope.items.length === 0) {
       // load the list
       $scope.items = [];
       $scope.loadList(function(data){
         angular.forEach(data, function(value, key) {
-          this.push({ id : value.id, name: value.title, active: $scope.item.id == value.id});
+          this.push({ id : value.id, name: value.name, active: $scope.dropdownitem.id == value.id});
         }, $scope.items);
       });
     }
@@ -170,6 +169,27 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
       // ctrl + n for new
     } else {
       $scope.listVisible = true;
+     // $scope.searchForMatch();
+    }
+    
+  };
+  
+  $scope.onKeyUp = function(ev){
+    if(ev.keyCode == 40){
+      // down
+    } else if (ev.keyCode == 38){
+      // up
+    } else if (ev.keyCode == 37){
+      // left
+    } else if (ev.keyCode == 39){
+      // right
+    } else if (ev.keyCode == 27){
+      // escape
+    } else if (ev.keyCode == 9 || ev.keyCode == 13){
+      // tab or enter
+    } else if (ev.keyCode == 17){
+      // ctrl + n for new
+    } else {
       $scope.searchForMatch();
     }
     
@@ -183,18 +203,16 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
         if(i < $scope.items.length - 1) {
           $scope.items[i].active = false;
           $scope.items[i + 1].active = true;
-          $scope.item.text = $scope.items[i + 1].name;
-          $scope.item.id = $scope.items[i + 1].id;
-          //$scope.selectedValueChange();
+          $scope.dropdownitem.text = $scope.items[i + 1].name;
+          $scope.dropdownitem.id = $scope.items[i + 1].id;
           break;
         }
       }
     }
     if (!found && $scope.items.length > 0){
       $scope.items[0].active = true;
-      $scope.item.text = $scope.items[0].name;
-      $scope.item.id = $scope.items[0].id;
-      //$scope.selectedValueChange();
+      $scope.dropdownitem.text = $scope.items[0].name;
+      $scope.dropdownitem.id = $scope.items[0].id;
     }
   };
   
@@ -204,9 +222,8 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
         if(i > 0) {
           $scope.items[i].active = false;
           $scope.items[i - 1].active = true;
-          $scope.item.text = $scope.items[i - 1].name;
-          $scope.item.id = $scope.items[i - 1].id;
-          //$scope.selectedValueChange();
+          $scope.dropdownitem.text = $scope.items[i - 1].name;
+          $scope.dropdownitem.id = $scope.items[i - 1].id;
         }
       }
     }
@@ -216,8 +233,8 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
     for (i = 0; i < $scope.items.length; i++) {
       if ($scope.items[i].name == name) {
         $scope.items[i].active = true;
-        $scope.item.text = $scope.items[i].name;
-        $scope.item.id = $scope.items[i].id;
+        $scope.dropdownitem.text = $scope.items[i].name;
+        $scope.dropdownitem.id = $scope.items[i].id;
       }else {
         $scope.items[i].active = false;
       }
@@ -230,18 +247,18 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
   };
   
   $scope.selectItem = function(id, text) {
-    $scope.item.id = id;
-    $scope.item.text = text;
+    $scope.dropdownitem.id = id;
+    $scope.dropdownitem.text = text;
     $scope.selectedValueChanged(id, text);
   };
   
   $scope.searchForMatch = function(){
     var foundItem = false;
-    console.log(scope.item.text);
+    //console.log($scope.dropdownitem.text);
     angular.forEach($scope.items, function(value, key) {
-      if($scope.item.text.length === 0 || foundItem === true) {
+      if($scope.dropdownitem.text.length === 0 || foundItem === true) {
         value.active = false;
-      } else if (value.name.indexOf($scope.item.text) === 0) {
+      } else if (value.name.toUpperCase().indexOf($scope.dropdownitem.text.toUpperCase()) === 0) {
         value.active = true;
         foundItem = true;
       } else {
@@ -251,7 +268,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
     if (foundItem === false && $scope.length > 0) {
       angular.forEach($scope.items, function(value, key) {
         // contains
-        if(foundItem === false && value.name.indexOf($scope.item.text) > 0) {
+        if(foundItem === false && value.name.toUpperCase().indexOf($scope.dropdownitem.text.toUpperCase()) > 0) {
           value.active = true;
           foundItem = false;
         }
