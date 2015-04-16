@@ -23,7 +23,7 @@
         <div class="col-xs-2">
           
           <input type="text" class="form-control" >
-          <ul class="dropdown-menu" role="menu" style="display:block;">
+          <ul class="dropdown-menu" role="menu" style="display:block; min-width: 200px; left: 15px;">
             <li class="disabled"><a role="menuitem" tabindex="-1" href="#"><i>Start typing to search</i></a></li>
             <li class="disabled"><a role="menuitem" tabindex="-1" href="#"><i>No matches found</i></a></li>
             <li class="disabled"><a role="menuitem" tabindex="-1" href="#"><i>Loading...</i></a></li>
@@ -35,23 +35,14 @@
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
             <li role="presentation" class="divider"></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Add new</a></li>
-            <li>
-              <div class="row">
-                <div class="col-xs-8">
-                  <input type="text" class="form-control" placeholder="Type new item here..." >
-                </div>
-                <div class="col-xs-4">
-                  <a href="#" class="btn btn-primary"><span class="icon-font-add"></span></a>
-                </div>
-              </div>
-            </li>
+            
           </ul>
         </div>
         <div class="col-xs-2" ng-cloak>
           <div ng-controller='TimesheetController'>
-            <p>{{item.projectId}} {{item.project}}</p>
             <div ng-controller="ProjectController" ng-include src="'dropdown-template.html'" onload="onLoad()" ng-cloak>
             </div>
+            <p>{{item.projectId}} {{item.project}}</p>
           </div>
         </div>
         <div class="col-xs-3">
@@ -59,7 +50,7 @@
             <input type="item.text" ng-model="text" ng-focus="onFocus()" 
               ng-blur="onBlur()" ng-keydown="onKeyDown($event)"
               focus-on="newItemAdded" class="form-control" >
-            <ul class="dropdown-menu" role="menu" ng-if="showList()" ng-mouseover="onHover()" ng-mouseleave="onLeave()" style="display: block;">
+            <ul class="dropdown-menu" role="menu" ng-if="showList()" ng-mouseover="onHover()" ng-mouseleave="onLeave()" style="display: block; min-width: 200px; left: 15px;">
               <li ng-repeat="item in items| filter:text" ng-click="itemClicked(item.name)" ng-class="{active: item.active}">
                 <a role="menuitem" tabindex="-1"  href="#">
                   {{item.name}}
@@ -90,7 +81,7 @@
       <input type="text" ng-model="item.text" ng-focus="onFocus()" 
         ng-blur="onBlur()" ng-keydown="onKeyDown($event)"
         focus-on="newItemAdded" class="form-control" >
-      <ul class="dropdown-menu" role="menu" ng-if="showList()" ng-mouseover="onHover()" ng-mouseleave="onLeave()" style="display: block;">
+      <ul class="dropdown-menu" role="menu" ng-if="showList()" ng-mouseover="onHover()" ng-mouseleave="onLeave()" style="display: block; min-width: 200px; left: 15px;">
         <li ng-repeat="item in items" ng-click="itemClicked(item.name)" ng-class="{active: item.active}">
           <a role="menuitem" tabindex="-1"  href="#">
             {{item.name}}

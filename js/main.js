@@ -52,7 +52,7 @@ sampleApp.controller('ProjectController', function($scope, $http, $controller){
     });
   };
   
-  $scope.selectedValueChange = function(id, text){
+  $scope.selectedValueChanged = function(id, text){
     $scope.item.projectId = id;
     $scope.item.project = text;
   };
@@ -86,7 +86,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
       $scope.items = [];
       $scope.loadList(function(data){
         angular.forEach(data, function(value, key) {
-          this.push({ id : value.id, name: value.title, active: $scope.id == value.id});
+          this.push({ id : value.id, name: value.title, active: $scope.item.id == value.id});
         }, $scope.items);
       });
     }
@@ -97,7 +97,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
     $scope.searchForMatch();
   });
   
-  $scope.selectedValueChange = function(id, text){
+  $scope.selectedValueChanged = function(id, text){
     
   };
   
@@ -113,7 +113,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
       for (i = 0; i < $scope.items.length; i++) {
         // make sure the selected item is valid
         if ($scope.items[i].active === true) {
-          $scope.selectedValueChange();
+          $scope.selectedValueChanged($scope.items[i].id, $scope.items[i].name);
         }
       }
     }
@@ -216,14 +216,14 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
     for (i = 0; i < $scope.items.length; i++) {
       if ($scope.items[i].name == name) {
         $scope.items[i].active = true;
-          $scope.item.text = $scope.items[i].name;
-          $scope.item.id = $scope.items[i].id;
+        $scope.item.text = $scope.items[i].name;
+        $scope.item.id = $scope.items[i].id;
       }else {
         $scope.items[i].active = false;
       }
     }
     console.log('item clicked');
-    $scope.item.text = name;
+    $scope.selectActiveItem();
     $scope.listHover = false;
     $scope.listVisible = false;
     $scope.$broadcast('newItemAdded');
@@ -261,12 +261,15 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
   
   $scope.selectActiveItem = function(){
     // select the active item in the list or reset the text to blank
+    var found = false;
     angular.forEach($scope.items, function(value, key) {
       if(value.active === true) {
-        $scope.selectItem(value.id, value.text);
-        return;
+        $scope.selectItem(value.id, value.name);
+        found = true;
       } 
     });
-    $scope.selectItem(0, '');
+    if(found === false) {
+      $scope.selectItem(0, '');
+    }
   };
 });
