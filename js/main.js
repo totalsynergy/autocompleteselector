@@ -1,5 +1,24 @@
 var sampleApp = angular.module('sampleApp', []);
 
+var uniqueItems = function (data, key) {
+    var result = [];
+    for (var i = 0; i < data.length; i++) {
+        var value = data[i][key];
+        if (result.indexOf(value) == -1) {
+            result.push(value);
+        }
+    }
+    return result;
+};
+
+sampleApp.filter('groupBy',
+            function () {
+                return function (collection, key) {
+                    if (collection === null) return;
+                    return uniqueItems(collection, key);
+        };
+    });
+
 sampleApp.directive('focusOn', function() {
    return function(scope, elem, attr) {
       scope.$on(attr.focusOn, function(e) {
@@ -63,6 +82,8 @@ sampleApp.controller('ProjectController', function($scope, $http, $controller){
 
 sampleApp.controller('DropDownController', function ($scope, $http) {
   $scope.items = [];
+  $scope.originalItems = [];
+  $scope.groups = [];
   $scope.dropdownitem = { id: 0, text: ""};
   $scope.listVisible = false;
   $scope.listHover = false;
@@ -85,16 +106,32 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
       $scope.items = [];
       $scope.loadList(function(data){
         angular.forEach(data, function(value, key) {
-          this.push({ id : value.id, name: value.name, active: $scope.dropdownitem.id == value.id});
+          this.push(
+            { 
+              id : value.id, 
+              name: value.name, 
+              active: $scope.dropdownitem.id == value.id, 
+              group: (typeof(value.group) != "undefined" ? value.group : "")
+            });
         }, $scope.items);
+        $scope.originalItems = $scope.items.slice();
+        $scope.groups = uniqueItems($scope.items, 'group');
       });
     }
   });
   
-  $scope.$watch('item.text', function(newValue, oldValue){
+  $scope.skipSearch = false;
+  
+  $scope.$watch('dropdownitem.text', function(newValue, oldValue){
     console.log(newValue + ', ' + oldValue);
-    $scope.searchForMatch();
+    if ($scope.skipSearch === false) $scope.searchForMatch();
   });
+  
+  $scope.groupMatcher = function(groupFilter) {
+    return function(item) {
+      return item.group === groupFilter;
+    };
+  };
   
   $scope.selectedValueChanged = function(id, text){
     
@@ -205,6 +242,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
           $scope.items[i + 1].active = true;
           $scope.dropdownitem.text = $scope.items[i + 1].name;
           $scope.dropdownitem.id = $scope.items[i + 1].id;
+          $scope.skipSearch = true;
           break;
         }
       }
@@ -213,6 +251,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
       $scope.items[0].active = true;
       $scope.dropdownitem.text = $scope.items[0].name;
       $scope.dropdownitem.id = $scope.items[0].id;
+          $scope.skipSearch = true;
     }
   };
   
@@ -224,6 +263,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
           $scope.items[i - 1].active = true;
           $scope.dropdownitem.text = $scope.items[i - 1].name;
           $scope.dropdownitem.id = $scope.items[i - 1].id;
+          $scope.skipSearch = true;
         }
       }
     }
@@ -254,7 +294,17 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
   
   $scope.searchForMatch = function(){
     var foundItem = false;
-    //console.log($scope.dropdownitem.text);
+    // If the length of the list is > 10 then filter the list
+    if( $scope.originalItems.length > 10 ){
+      $scope.items = $scope.originalItems.slice();
+      if($scope.dropdownitem.text.length > 0){
+        $scope.items = $.grep($scope.items, function( value, i ) {
+          return ( value.name.toUpperCase().indexOf($scope.dropdownitem.text.toUpperCase()) >= 0 );
+        });
+      }
+      $scope.groups = uniqueItems($scope.items, 'group');
+    }
+    
     angular.forEach($scope.items, function(value, key) {
       if($scope.dropdownitem.text.length === 0 || foundItem === true) {
         value.active = false;

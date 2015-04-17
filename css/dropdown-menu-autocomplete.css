@@ -1,0 +1,77 @@
+.dropdown-menu-autocomplete {
+  min-width: 200px;
+  max-height: 320px;
+  overflow-y: scroll;
+  left: 15px;
+  top: 32px;
+  position: absolute;
+  z-index: 1000;
+  float: left;
+  padding: 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.dropdown-menu-autocomplete > div > .dropdown-menu-autocomplete-group {
+  display: block;
+  padding: 3px 20px;
+  font-size: 12px;
+  /*font-weight: bold;*/
+  line-height: 1.42857143;
+  color: #777;
+  white-space: nowrap;
+  
+  /*color: #262626;*/
+  background-color: #f3f3f3;
+}
+
+.dropdown-menu-autocomplete > div > li {
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+.dropdown-menu-autocomplete > div > li > a {
+  display: block;
+  padding: 0 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+
+.dropdown-menu-autocomplete > div > li > a.dropdown-menu-autocomplete-item {
+  padding: 3px 20px;
+}
+
+.dropdown-menu-autocomplete .divider {
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+
+.dropdown-menu-autocomplete > div > li > a:hover,
+.dropdown-menu-autocomplete > div > li > a:focus {
+  color: #262626;
+  text-decoration: none;
+  background-color: #f5f5f5;
+}
+.dropdown-menu-autocomplete > div > .active > a,
+.dropdown-menu-autocomplete > div > .active > a:hover,
+.dropdown-menu-autocomplete > div > .active > a:focus {
+  color: #fff;
+  text-decoration: none;
+  background-color: #337ab7;
+  outline: 0;
+}
