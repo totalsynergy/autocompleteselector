@@ -61,6 +61,7 @@ sampleApp.controller('ProjectController', function($scope, $http, $controller){
   var parentOnLoad = $scope.onLoad;
   $scope.onLoad = function(){
     parentOnLoad();
+    $scope.setPlaceholder('Select project...');
     $scope.selectItem($scope.item.projectId, $scope.item.project);
   };
   
@@ -70,7 +71,7 @@ sampleApp.controller('ProjectController', function($scope, $http, $controller){
     });
   };
   
-  $scope.selectedValueChanged = function(id, text){
+  $scope.selectedValueChanged = function(id, text, groupid, group){
     $scope.item.projectId = id;
     $scope.item.project = text;
   };
@@ -84,10 +85,11 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
   $scope.items = [];
   $scope.originalItems = [];
   $scope.groups = [];
-  $scope.dropdownitem = { id: 0, text: ""};
+  $scope.dropdownitem = { id: 0, text: "", groupid: 0, group: ''};
   $scope.listVisible = false;
   $scope.listHover = false;
   $scope.groupby = "";
+  $scope.placeholder = "select...";
   
   var scope = $scope;
   
@@ -98,6 +100,10 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
   $scope.loadList = function(callback){
     var data = [];
     callback(data);
+  };
+  
+  $scope.setPlaceholder = function(placeholder) {
+    $scope.placeholder = placeholder;
   };
   
   $scope.$watchGroup(['listVisible', 'listHover'], function(newValues, oldValues, scope) {
@@ -111,7 +117,8 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
               id : value.id, 
               name: value.name, 
               active: $scope.dropdownitem.id == value.id, 
-              group: (typeof(value.group) != "undefined" ? value.group : "")
+              groupid: typeof(value.groupid) != "undefined" ? value.groupid : 0, 
+              group: typeof(value.group) != "undefined" ? value.group : ""
             });
         }, $scope.items);
         $scope.originalItems = $scope.items.slice();
@@ -133,7 +140,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
     };
   };
   
-  $scope.selectedValueChanged = function(id, text){
+  $scope.selectedValueChanged = function(id, text, groupid, group){
     
   };
   
@@ -149,7 +156,7 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
       for (i = 0; i < $scope.items.length; i++) {
         // make sure the selected item is valid
         if ($scope.items[i].active === true) {
-          $scope.selectedValueChanged($scope.items[i].id, $scope.items[i].name);
+          $scope.selectedValueChanged($scope.items[i].id, $scope.items[i].name, $scope.items[i].groupid, $scope.items[i].group);
         }
       }
     }
@@ -286,10 +293,12 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
     $scope.$broadcast('newItemAdded');
   };
   
-  $scope.selectItem = function(id, text) {
+  $scope.selectItem = function(id, text, groupid, group) {
     $scope.dropdownitem.id = id;
     $scope.dropdownitem.text = text;
-    $scope.selectedValueChanged(id, text);
+    $scope.dropdownitem.groupid = groupid;
+    $scope.dropdownitem.group = group;
+    $scope.selectedValueChanged(id, text, groupid, group);
   };
   
   $scope.searchForMatch = function(){
@@ -331,12 +340,12 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
     var found = false;
     angular.forEach($scope.items, function(value, key) {
       if(value.active === true) {
-        $scope.selectItem(value.id, value.name);
+        $scope.selectItem(value.id, value.name, value.groupid, value.group);
         found = true;
       } 
     });
     if(found === false) {
-      $scope.selectItem(0, '');
+      $scope.selectItem(0, '', 0, '');
     }
   };
 });
