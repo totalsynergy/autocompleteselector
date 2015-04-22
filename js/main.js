@@ -81,7 +81,7 @@ sampleApp.controller('ProjectController', function($scope, $http, $controller){
   
 });
 
-sampleApp.controller('DropDownController', function ($scope, $http) {
+sampleApp.controller('DropDownController', ['$scope', '$http', function ($scope, $http) {
   $scope.items = [];
   $scope.originalItems = [];
   $scope.groups = [];
@@ -348,4 +348,4 @@ sampleApp.controller('DropDownController', function ($scope, $http) {
       $scope.selectItem(0, '', 0, '');
     }
   };
-});
+}]);
