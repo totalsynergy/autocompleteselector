@@ -101,6 +101,10 @@ sampleApp.controller('DropDownController', ['$scope', '$http', function ($scope,
     var data = [];
     callback(data);
   };
+
+    $scope.clearList = function () {
+        $scope.items = [];
+    };
   
   $scope.setPlaceholder = function(placeholder) {
     $scope.placeholder = placeholder;
